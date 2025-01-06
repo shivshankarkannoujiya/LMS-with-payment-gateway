@@ -17,6 +17,7 @@
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
     "mongoose": "^8.9.3",
+    "morgan": "^1.10.0",
     "prettier": "^3.4.2"
   }
 }

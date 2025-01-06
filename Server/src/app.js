@@ -1,6 +1,11 @@
 import express from 'express';
+import morgan from 'morgan';
 const app = express();
 
+
+// Body Parser Middleware
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({extended: true, limit: "10kb"}))
 
 
 
