@@ -61,7 +61,8 @@ app.use(
 );
 
 // API Routes
-
+import healthRoute from './routes/health.routes.js';
+app.use('/health', healthRoute);
 
 // it should be always at bottom
 // 404 handler
