@@ -45,4 +45,28 @@ export const loginUser = asyncHandler(async (req, res) => {
     generateToken(res, user, `Welcome back ${user.name}`);
 });
 
+export const logOutUser = asyncHandler(async (_, res) => {
+    res.cookie('token', '', { maxAge: 0 }).status(200).json({
+        success: true,
+        message: 'Sign out successfully',
+    });
+});
 
+export const getCurrentUserProfile = asyncHandler(async (req, res) => {
+    const user = User.findById(req.id).populate({
+        path: 'enrolledCourses.course',
+        select: 'title thumbnail description',
+    });
+
+    if (!user) {
+        throw new ApiError('User not found', 404);
+    }
+
+    res.status(200).json({
+        success: true,
+        data: {
+            ...user.toJSON(),
+        },
+        totalEnrolledCourses: user.totalEnrolledCourses,
+    });
+});

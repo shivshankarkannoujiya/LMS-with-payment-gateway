@@ -8,3 +8,9 @@ export class ApiError extends Error {
         Error.captureStackTrace(this, this.constructor);
     }
 }
+
+
+// handle JWT Error 
+export const handleJWTError = () => {
+    new ApiError('Invalid token. Please login again', 401)
+}
