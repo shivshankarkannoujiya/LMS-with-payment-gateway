@@ -60,9 +60,14 @@ app.use(
     })
 );
 
-// API Routes
+// API Routes import
 import healthRoute from './routes/health.routes.js';
+import userRouter from './routes/user.routes.js';
+
+// router initialization
 app.use('/health', healthRoute);
+app.use('/api/v1/user', userRouter);
+
 
 // it should be always at bottom
 // 404 handler

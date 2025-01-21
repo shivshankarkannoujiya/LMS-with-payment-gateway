@@ -1,7 +1,10 @@
 import { User } from '../models/user.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { deleteMediaFromCloudinary, uploadMedia } from '../utils/cloudinary.js';
 import { generateToken } from '../utils/generateToken.js';
+
+
 
 export const createUserAccount = asyncHandler(async (req, res) => {
     const { name, email, password, role = 'student' } = req.body;
@@ -69,4 +72,46 @@ export const getCurrentUserProfile = asyncHandler(async (req, res) => {
         },
         totalEnrolledCourses: user.totalEnrolledCourses,
     });
+});
+
+export const updateUserProfile = asyncHandler(async (req, res) => {
+    const { name, email, bio } = req.body;
+    const updateData = {
+        name,
+        email: email?.toLowerCase(),
+        bio,
+    };
+
+    if (req.file) {
+        const avatarResult = await uploadMedia(req.file.path);
+        console.log(avatarResult); // for debugging
+        updateData.avatar = avatarResult.secure_url;
+
+        // delete old avatar
+        const user = await User.findById(req.id);
+        if (
+            user.avatar &&
+            user.avatar !==
+                `https://api.dicebear.com/5.x/initials/svg?seed=${name}`
+        ) {
+            await deleteMediaFromCloudinary(user.avatar);
+        }
+    }
+
+    // update user and get updated documents
+    const updatedUser = await User.findById(req.id, updateData, {
+        new: true,
+        runValidators: true,
+    });
+
+    if (!updatedUser) {
+        throw new ApiError('user not found', 404);
+    }
+
+    res.status(200).json({
+        sucees: true,
+        message: 'Profile updated successfully',
+        data: updatedUser,
+    });
+
 });
