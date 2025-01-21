@@ -8,10 +8,12 @@ import {
 } from '../controllers/user.controller.js';
 import { isAuthenticated } from '../middlewares/auth.middleware.js';
 import upload from '../utils/multer.js';
+import { validateSignup } from '../middlewares/validation.middleware.js';
+
 const router = Router();
 
 // Auth Routes
-router.route('/signup').post(createUserAccount);
+router.route('/signup').post(validateSignup, createUserAccount);
 router.route('login').post(loginUser);
 router.post('signout').post(logOutUser);
 
