@@ -38,7 +38,6 @@ export const checkHealth = async (_, res) => {
     }
 };
 
-
 // utility method
 function getReadyStateText(state) {
     switch (state) {
